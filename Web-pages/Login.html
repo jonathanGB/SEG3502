@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>eGrant Home Page</title>
+</head>
+
+<body bgcolor="#E6E6FA">
+
+<h2> eGrant : Conference Travel Grant System </h2> <br>
+<img src = "image.png" alt = "Logo" width = "200" height = "200">
+<br><br>
+
+<i> Please enter your account information below. </i><br><br>
+
+<form>
+    Login ID : <input type="text" name="loginId"><br>
+    Password : <input type="password" name="pass"><br>
+    <button name = "signInButton" value = "signIn" type = "button" onmousedown="verify()">Sign In</button>
+</form>
+
+<script>
+
+    function verify(loginId, pass)
+    {
+        // search database : returns null of a permittedUser (either a requester or supervisor)
+        // PermittedUser findUser(loginId, pass)
+        //{
+        //    ???
+        //}
+
+
+        // if found, then redirect to correct page (according to user)
+
+                // if user is a Requester -> send to Requester page
+
+            // window.location = "RequesterPage.html";
+
+                // if user is a Supervisor -> send to Supervisor page
+
+            // window.location = "SupervisorPage.html";
+
+                // if user is an Admin -> send to Admin Page
+
+         //window.location = "AdminPage.html";
+
+            // else display error message :
+
+        //alert("You have entered an invalid Login ID and/or Password. Please try again.");
+    }
+</script>
+
+</body>
+
+</html>

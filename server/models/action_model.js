@@ -171,6 +171,21 @@ exports.updateTable = (tableName, id, obj, asyncCb) => {
   })
 }
 
+exports.updateStatus = (id, newStatus, callback) => {
+  var con = new pg.Client(cfg.dbConn)
+  con.connect((err) => {
+    if (err) {
+      return callback(err)
+    }
+
+    con.query(`UPDATE grantapplication SET status = $1 WHERE id = $2`, [newStatus, id], (err) => {
+      con.end()
+
+      callback(err)
+    })
+  })
+}
+
 function rollback(client, callback, err) {
   client.query('ABORT', () => {
     client.end()

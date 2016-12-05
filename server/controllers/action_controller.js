@@ -93,6 +93,11 @@ exports.saveApplication = ({params: {id}, body: {grantApplication, expense, conf
 
 
 exports.submitApplication = ({params: {id}}, res) => {
-  // TODO: check all fields are not empty
+  // assumption that all fields are ok (client-side check)
+  action.updateStatus(id, 'pending supervisor', (error) => {
+    res.status(error ? 500 : 200).json({
+      error
+    })
+  })
   // if all good, change status to "pending review" ... otherwise, send error message
 }

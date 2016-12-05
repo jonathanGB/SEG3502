@@ -46,3 +46,50 @@ CREATE TABLE admins (
   PRIMARY KEY (loginId)
 );
 INSERT INTO admins(loginId, password) VALUES ('admin', '$2a$10$O.nZ9zEUzwroerTkiNCIjOn1FCOyAf1vhYgY0bY3vKQMy9IhRljPa');
+
+
+
+
+
+DROP TABLE IF EXISTS expense;
+DROP TABLE IF EXISTS conference;
+DROP TABLE IF EXISTS geoZone;
+DROP TABLE IF EXISTS grantapplication;
+DROP TABLE IF EXISTS presentationType;
+
+CREATE TABLE presentationType (
+  name                 VARCHAR(10) NOT NULL UNIQUE
+);
+
+CREATE TABLE grantapplication (
+  id                   SERIAL,
+  stage                VARCHAR(20) NOT NULL DEFAULT 'pre-approval',
+  status               VARCHAR(20) NOT NULL,
+  presentationTitle    VARCHAR(50) NOT NULL,
+  requestAdvanceFunds  BOOLEAN NOT NULL,
+  presentationTypeName VARCHAR(10) NOT NULL,
+  PRIMARY KEY(id),
+  FOREIGN KEY(presentationTypeName) REFERENCES presentationType(name)
+);
+
+CREATE TABLE expense (
+  description          VARCHAR(50) NOT NULL,
+  amount               INTEGER NOT NULL,
+  requestId            INTEGER,
+  FOREIGN KEY(requestId) REFERENCES grantapplication(id)
+);
+
+CREATE TABLE geoZone (
+  name                VARCHAR(20) NOT NULL UNIQUE
+);
+
+CREATE TABLE conference (
+  startDate           DATE NOT NULL,
+  endDate             DATE NOT NULL,
+  website             VARCHAR(50) NOT NULL,
+  location            VARCHAR(50) NOT NULL,
+  applicationId       INTEGER,
+  geoZoneName         VARCHAR(20),
+  FOREIGN KEY(applicationId) REFERENCES grantapplication(id),
+  FOREIGN KEY(geoZoneName) REFERENCES geoZone(name)
+);

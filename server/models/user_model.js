@@ -17,7 +17,7 @@ module.exports.addAdmin = ({loginId, password}, callback) => {
 
       con.query(`INSERT INTO admins(loginId, password) VALUES ($1, $2)`, [loginId, password], (err, data) => {
         con.end()
-        
+
         callback(err)
       })
     })
@@ -131,6 +131,3 @@ module.exports.logOff = (id, type, callback) => {
     })
   })
 }
-
-
-//POST METHODS

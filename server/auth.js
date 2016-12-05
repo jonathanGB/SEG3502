@@ -32,19 +32,12 @@ module.exports.authenticate = (req, res, next) => {
     })
 };
 
-module.exports.authorizedToDelete = (req, res, next) => {
-    user.authorizedToDelete(req.body.post, req.user.id, (err, authorized) => {
-        if(err) {
-            return res.status(500).json({
-                error: true,
-                data: 'Database Error'
-            })
-        } else if (!authorized){
-            return res.status(401).json({
-                error: true,
-                data: 'User does not have right to delete this post'
-            })
-        }
-        next()
+module.exports.adminCheck = ({user: {type}}, res, next) => {
+  if (type === "admins") {
+    next()
+  } else {
+    res.status(401).json({
+      error: 'Reserved to admins'
     })
+  }
 }

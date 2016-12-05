@@ -10,7 +10,7 @@ CREATE TABLE supervisors (
   password              VARCHAR(100) NOT NULL,
   status                BOOLEAN NOT NULL DEFAULT TRUE,
   empNumber             VARCHAR(10) NOT NULL UNIQUE,
-  isLoggedIn              BOOLEAN NOT NULL DEFAULT FALSE,
+  isLoggedIn            BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (loginId)
 );
 INSERT INTO supervisors(surname, givenName, email, loginId, password, empNumber) VALUES ('foo2', 'bar2', 'na@topkek.com', '123123', '$2a$10$5gXp9Y9a/oTVaoXKU8qgxuB0ljordXiajcL1xYiR47MGxJmsOODkK', '456456');
@@ -39,9 +39,9 @@ CREATE TABLE requesters (
 DROP TABLE IF EXISTS admins;
 CREATE TABLE admins (
   givenName             VARCHAR(35) DEFAULT 'admin',
-  username              VARCHAR(20) NOT NULL,
+  loginId               VARCHAR(20) NOT NULL,
   password              VARCHAR(100) NOT NULL,
-  isLoggedIn              BOOLEAN NOT NULL DEFAULT FALSE,
-  PRIMARY KEY (username)
+  isLoggedIn            BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (loginId)
 );
-INSERT INTO admins(username, password) VALUES ('admin', '$2a$10$O.nZ9zEUzwroerTkiNCIjOn1FCOyAf1vhYgY0bY3vKQMy9IhRljPa')
+INSERT INTO admins(loginId, password) VALUES ('admin', '$2a$10$O.nZ9zEUzwroerTkiNCIjOn1FCOyAf1vhYgY0bY3vKQMy9IhRljPa');

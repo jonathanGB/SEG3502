@@ -4,27 +4,34 @@ const jwt = require('jwt-simple')
 const cfg = require('../config')
 const bcrypt = require('bcrypt')
 
+module.exports.addUser = ({body}, res) => {
+  if (!body) {
+    return res.status(400).json({
+      error: 'No body provided'
+    })
+  }
 
-module.exports.register = ({body: {username = null, password = null}}, res) => {
-    if (utils.isEmpty(username)) {
-        res.status(401).json({
-            error: true,
-            data: "Username is Null"
-        })
-    } else if (utils.isEmpty(password)) {
-        res.status(401).json({
-            error: true,
-            data: "password is Null"
-        })
-    } else {
-        user.register(username, password, (err, data) => {
-            res.status(err ? 500 : 201).json({
-                error: err,
-                data: data
-            })
-        })
-    }
+  switch (body.userType) {
+  case "admins":
+    user.addAdmin(body, addUserFeedback)
+    break
+  case "supervisors":
+    user.addSupervisor(body, addUserFeedback)
+    break
+  case "requesters":
+    user.addRequester(body, addUserFeedback)
+    break
+  default:
+    res.status(401).json({
+      error: "bad type"
+    })
+  }
 
+  function addUserFeedback(err) {
+    res.status(err ? 400 : 200).json({
+      err
+    })
+  }
 }
 
 module.exports.login = ({body: {loginId, password, type}}, res) => {
@@ -55,9 +62,9 @@ module.exports.login = ({body: {loginId, password, type}}, res) => {
 }
 
 module.exports.logOff = ({user: {type, data: {loginid}}}, res) => {
-  user.logOff(loginid, type, (err) => {
-    res.status(err ? 400: 200).json({
-      err
+  user.logOff(loginid, type, (error) => {
+    res.status(error ? 400: 200).json({
+      error
     })
   })
 }

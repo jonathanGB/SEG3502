@@ -1,3 +1,4 @@
+const async = require('async')
 const action = require('../models/action_model');
 const utils = require('../utils/util');
 
@@ -58,7 +59,40 @@ exports.createApplication = ({user: {data: {loginid, supervisorid}}}, res) => {
   })
 }
 
-exports.saveApplication = ({params: {id}, body}, res) => {
-  // TODO: get all body data
-  // TODO: update necessary tables
+exports.saveApplication = ({params: {id}, body: {grantapplication, expense, conference}}, res) => {
+  async.series([
+    (cb) => {
+      saveTable(['presentationTitle', 'requestAdvanceFunds', 'presentationTypeName'], grantapplication, 'grantapplication', cb)
+    },
+    (cb) => {
+      saveTable(['inscription', 'transport', 'logement', 'repas'], expense, 'expense', cb)
+    },
+    (cb) => {
+      saveTable(['startDate', 'endDate', 'website', 'geoZoneName'], conference, 'conference', cb)
+    }
+  ], (error) => {
+      return res.status(error ? 500 : 200).json({
+        error
+      })
+  })
+
+  function saveTable(validKeys, obj, tableName, asyncCb) {
+    if (obj) {
+      Object.keys(obj).forEach((key) => {
+        if (!validKeys.includes(key)) {
+          delete obj[key]
+        }
+      })
+
+      action.updateTable(tableName, id, obj, asyncCb)
+    } else {
+      asyncCb(null)
+    }
+  }
+}
+
+
+exports.submitApplication = ({params: {id}}, res) => {
+  // TODO: check all fields are not empty
+  // if all good, change status to "pending review" ... otherwise, send error message
 }

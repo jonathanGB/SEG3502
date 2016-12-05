@@ -128,6 +128,36 @@ exports.createApplication = (requesterId, supervisorId, callback) => {
   }
 }
 
+exports.updateTable = (tableName, id, obj, asyncCb) => {
+  var con = new pg.Client(cfg.dbConn)
+  con.connect((err) => {
+    if (err) {
+      con.end()
+      return asyncCb(err)
+    }
+
+    if (tableName === "grantapplication") {
+      con.query('UPDATE grantapplication SET presentationTitle = $1, requestAdvanceFunds = $2, presentationTypeName = $3 WHERE id = $4', [obj.presentationTitle, obj.requestAdvanceFunds, obj.presentationTypeName, id], (err) => {
+        con.end()
+        console.log('1', err)
+        asyncCb(err)
+      })
+    } else  if (tableName === "expense") {
+      con.query('UPDATE expense SET inscription = $1, transport = $2, logement = $3, repas = $4 WHERE id = $5', [obj.inscription, obj.transport, obj.logement, obj.repas, id], (err) => {
+        con.end()
+        console.log('2', err)
+        asyncCb(err)
+      })
+    } else {
+      con.query('UPDATE conference SET startDate = $1, endDate = $2, website = $3, geoZoneName = $4 WHERE id = $5', [obj.startDate, obj.endDate, obj.website, obj.geoZoneName, id], (err) => {
+        con.end()
+        console.log('3', err)
+        asyncCb(err)
+      })
+    }
+  })
+}
+
 function rollback(client, callback, err) {
   client.query('ABORT', () => {
     client.end()

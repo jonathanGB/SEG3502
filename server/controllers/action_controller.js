@@ -3,6 +3,11 @@ const post = require('../models/action_model');
 const utils = require('../utils/util');
 const qs = require('querystring');
 
+exports.index = (req, res) => {
+  res.status(203).json(req.user)
+  // render according to user and type
+}
+
 exports.addPosts = (req, res) => {
     var userID = req.user.id;
     post.addPosts(req.body.description, req.body.url, req.body.tags, function (err, data) {

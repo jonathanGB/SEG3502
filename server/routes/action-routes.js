@@ -1,6 +1,6 @@
-const postController = require("../controllers/action_controller")
+const actionController = require("../controllers/action_controller")
 const auth = require("../auth")
 
 module.exports = function (app) {
-  // add endpoints
+  app.get('/', auth.authenticate, actionController.index)
 };

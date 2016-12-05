@@ -4,14 +4,6 @@ const jwt = require('jwt-simple')
 const cfg = require('../config')
 const bcrypt = require('bcrypt')
 
-module.exports.findAllUsers = (req, res) => {
-    user.findAllUsers((err, data) => {
-        res.status(err ? 404 : 200).json({
-            error: err,
-            data: data
-        })
-    })
-}
 
 module.exports.register = ({body: {username = null, password = null}}, res) => {
     if (utils.isEmpty(username)) {
@@ -35,19 +27,6 @@ module.exports.register = ({body: {username = null, password = null}}, res) => {
 
 }
 
-module.exports.findUser = (req, res) => {
-    user.findUser(req.params.username, (err, data) => {
-        res.status(err ?
-            400 :
-            data ?
-                202 :
-                404).json({
-            'error': err,
-            'data': data
-        });
-    })
-}
-
 module.exports.login = ({body: {loginId, password, type}}, res) => {
     if (!loginId || !password || !type) {
         return res.sendStatus(401)
@@ -57,11 +36,13 @@ module.exports.login = ({body: {loginId, password, type}}, res) => {
         console.log(data)
 
         if (err || !data) {
+          console.log(err)
             return res.sendStatus(404)
         }
-
+        console.log(data)
         const payload = {
-            id: data.loginId,
+            id: data.loginid,
+            type,
             timestamp: new Date()
         }
 
@@ -73,8 +54,10 @@ module.exports.login = ({body: {loginId, password, type}}, res) => {
     })
 }
 
-module.exports.logOff = (req, res) => {
-    user.logOff(req.user.id, req.user.uuid, (error, data) => {
-        res.status(error ? 400 : 200).json({error, data})
+module.exports.logOff = ({user: {type, data: {loginid}}}, res) => {
+  user.logOff(loginid, type, (err) => {
+    res.status(err ? 400: 200).json({
+      err
     })
+  })
 }

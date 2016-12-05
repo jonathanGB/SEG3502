@@ -99,5 +99,37 @@ exports.submitApplication = ({params: {id}}, res) => {
       error
     })
   })
-  // if all good, change status to "pending review" ... otherwise, send error message
+}
+
+exports.feedbackApplication = ({body: {response, recommandation}, params: {id}}, res) => {
+  if (!response) {
+    return res.status(401).json({
+      error: 'no response provided'
+    })
+  }
+
+  var newStatus;
+  if (recommandation) {
+    newStatus = "incomplete"
+  }
+  else if (response === "ok") {
+    newStatus = "pending fgps"
+  } else {
+    newStatus = "refused"
+  }
+
+  if (recommandation) {
+    action.feedbackApplication(id, newStatus, recommandation, (error) => {
+      res.status(error ? 500 : 200).json({
+        error
+      })
+    })
+  } else {
+    action.updateStatus(id, newStatus, (error) => {
+      res.status(error ? 500 : 200).json({
+        error
+      })
+    })
+  }
+
 }

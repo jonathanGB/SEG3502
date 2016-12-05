@@ -70,6 +70,7 @@ CREATE TABLE grantapplication (
   presentationTypeName VARCHAR(10),
   requesterId          VARCHAR(10),
   supervisorId         VARCHAR(10),
+  recommandations      TEXT,
   PRIMARY KEY(id),
   FOREIGN KEY(presentationTypeName) REFERENCES presentationType(name),
   FOREIGN KEY(requesterId) REFERENCES requesters(loginId),

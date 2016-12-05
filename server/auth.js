@@ -53,7 +53,17 @@ module.exports.requesterCheck = ({user: {type}}, res, next) => {
   }
 }
 
-module.exports.visibleAppCheck = ({params: {id}, user: {type, data: {loginid, empnumber}}}) => {
+module.exports.supervisorCheck = ({user: {type}}, res, next) => {
+  if (type === "supervisors") {
+    next()
+  } else {
+    res.status(401).json({
+      error: 'Reserved to requesters'
+    })
+  }
+}
+
+module.exports.visibleAppCheck = ({params: {id}, user: {type, data: {loginid, empnumber}}}, res, next) => {
   if (type === "admins") {
     next()
   } else {

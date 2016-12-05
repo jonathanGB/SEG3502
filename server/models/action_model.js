@@ -186,6 +186,21 @@ exports.updateStatus = (id, newStatus, callback) => {
   })
 }
 
+exports.feedbackApplication = (id, newStatus, recommandation, callback) => {
+  var con = new pg.Client(cfg.dbConn)
+  con.connect((err) => {
+    if (err) {
+      return callback(err)
+    }
+
+    con.query(`UPDATE grantapplication SET status = $1, recommandations = $2 WHERE id = $3`, [newStatus, recommandation, id], (err) => {
+      con.end()
+
+      callback(err)
+    })
+  })
+}
+
 function rollback(client, callback, err) {
   client.query('ABORT', () => {
     client.end()

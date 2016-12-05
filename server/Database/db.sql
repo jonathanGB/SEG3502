@@ -41,6 +41,7 @@ CREATE TABLE admins (
   givenName             VARCHAR(35) DEFAULT 'admin',
   loginId               VARCHAR(20) NOT NULL,
   password              VARCHAR(100) NOT NULL,
+  status                BOOLEAN NOT NULL DEFAULT TRUE,
   isLoggedIn            BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (loginId)
 );

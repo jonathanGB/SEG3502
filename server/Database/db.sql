@@ -12,6 +12,7 @@ CREATE TABLE supervisors (
   empNumber             VARCHAR(10) NOT NULL UNIQUE,
   PRIMARY KEY (loginId)
 );
+INSERT INTO supervisors(surname, givenName, email, loginId, password, empNumber) VALUES ('foo2', 'bar2', 'na@topkek.com', '123123', 'foo2bar2', '456456');
 
 
 CREATE TABLE requesters (
@@ -38,5 +39,5 @@ CREATE TABLE admins (
   username             VARCHAR(20) NOT NULL,
   password             VARCHAR(100) NOT NULL,
   PRIMARY KEY (username)
-)
-INSERT INTO admins(username, password) VALUES ("foo", "bar")
+);
+INSERT INTO admins(username, password) VALUES ('foo', 'bar')

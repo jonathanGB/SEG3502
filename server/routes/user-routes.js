@@ -7,7 +7,7 @@ module.exports = (app) => {
     // app.post('/users', userController.register)
     // app.get('/user/:username', userController.findUser)
     //
-    // app.post('/login', userController.login);
+    app.post('/login', userController.login);
     // app.put('/user/:username', auth.authenticate, userController.changeUser)
     // app.get('/logOff', auth.authenticate, userController.logOff)
 };

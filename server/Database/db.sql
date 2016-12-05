@@ -68,8 +68,12 @@ CREATE TABLE grantapplication (
   presentationTitle    VARCHAR(50) NOT NULL,
   requestAdvanceFunds  BOOLEAN NOT NULL,
   presentationTypeName VARCHAR(10) NOT NULL,
+  requesterId          VARCHAR(10) NOT NULL,
+  supervisorId         VARCHAR(10) NOT NULL,
   PRIMARY KEY(id),
-  FOREIGN KEY(presentationTypeName) REFERENCES presentationType(name)
+  FOREIGN KEY(presentationTypeName) REFERENCES presentationType(name),
+  FOREIGN KEY(requesterId) REFERENCES requesters(loginId),
+  FOREIGN KEY(supervisorId) REFERENCES supervisors(empNumber)
 );
 
 CREATE TABLE expense (

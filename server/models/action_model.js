@@ -143,13 +143,26 @@ exports.updateTable = (tableName, id, obj, asyncCb) => {
         asyncCb(err)
       })
     } else  if (tableName === "expense") {
-      con.query('UPDATE expense SET inscription = $1, transport = $2, logement = $3, repas = $4 WHERE id = $5', [obj.inscription, obj.transport, obj.logement, obj.repas, id], (err) => {
+      async.series([
+        (cb) => {
+          con.query('UPDATE expense SET amount = $1 WHERE description = $2 AND requestId = $3', [obj.inscription, 'inscription', id], cb)
+        },
+        (cb) => {
+          con.query('UPDATE expense SET amount = $1 WHERE description = $2 AND requestId = $3', [obj.transport, 'transport', id], cb)
+        },
+        (cb) => {
+          con.query('UPDATE expense SET amount = $1 WHERE description = $2 AND requestId = $3', [obj.logement, 'logement', id], cb)
+        },
+        (cb) => {
+          con.query('UPDATE expense SET amount = $1 WHERE description = $2 AND requestId = $3', [obj.repas, 'repas', id], cb)
+        }
+      ], (err) => {
         con.end()
         console.log('2', err)
         asyncCb(err)
       })
     } else {
-      con.query('UPDATE conference SET startDate = $1, endDate = $2, website = $3, geoZoneName = $4 WHERE id = $5', [obj.startDate, obj.endDate, obj.website, obj.geoZoneName, id], (err) => {
+      con.query('UPDATE conference SET startDate = $1, endDate = $2, website = $3, location = $4, geoZoneName = $5 WHERE applicationId = $6', [obj.startDate, obj.endDate, obj.website, obj.location, obj.geoZoneName, id], (err) => {
         con.end()
         console.log('3', err)
         asyncCb(err)

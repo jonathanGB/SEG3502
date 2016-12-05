@@ -59,16 +59,16 @@ exports.createApplication = ({user: {data: {loginid, supervisorid}}}, res) => {
   })
 }
 
-exports.saveApplication = ({params: {id}, body: {grantapplication, expense, conference}}, res) => {
+exports.saveApplication = ({params: {id}, body: {grantApplication, expense, conference}}, res) => {
   async.series([
     (cb) => {
-      saveTable(['presentationTitle', 'requestAdvanceFunds', 'presentationTypeName'], grantapplication, 'grantapplication', cb)
+      saveTable(['presentationTitle', 'requestAdvanceFunds', 'presentationTypeName'], grantApplication, 'grantapplication', cb)
     },
     (cb) => {
       saveTable(['inscription', 'transport', 'logement', 'repas'], expense, 'expense', cb)
     },
     (cb) => {
-      saveTable(['startDate', 'endDate', 'website', 'geoZoneName'], conference, 'conference', cb)
+      saveTable(['startDate', 'endDate', 'website', 'location', 'geoZoneName'], conference, 'conference', cb)
     }
   ], (error) => {
       return res.status(error ? 500 : 200).json({

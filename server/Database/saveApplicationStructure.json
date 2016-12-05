@@ -13,6 +13,7 @@
 	"conference" : {
 		"startDate": "2017-01-01",
 		"endDate": "2017-01-04",
+		"location": "montreal",
 		"website": "http://2017.cusec.net",
 		"geoZoneName": "north america"
 	}

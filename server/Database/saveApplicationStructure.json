@@ -1,0 +1,19 @@
+{
+	"grantApplication": {
+		"presentationTitle": "kek",
+		"requestAdvanceFunds": false,
+		"presentationTypeName": "poster"
+	},
+	"expense": {
+		"inscription" : 0,
+		"transport": 27,
+		"logement": 100,
+		"repas": 70
+	},
+	"conference" : {
+		"startDate": "2017-01-01",
+		"endDate": "2017-01-04",
+		"website": "http://2017.cusec.net",
+		"geoZoneName": "north america"
+	}
+}

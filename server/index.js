@@ -5,9 +5,7 @@ const bodyParser = require('body-parser');
 const pg = require('pg');
 const logger = require('morgan');
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.json());
 app.use(logger('dev'));
 
 require('./routes/user-routes')(app);

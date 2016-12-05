@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS expense;
+DROP TABLE IF EXISTS conference;
+DROP TABLE IF EXISTS geoZone;
+DROP TABLE IF EXISTS grantapplication;
+DROP TABLE IF EXISTS presentationType;
 DROP TABLE IF EXISTS requesters;
 DROP TABLE IF EXISTS supervisors;
 
@@ -50,26 +55,21 @@ INSERT INTO admins(loginId, password) VALUES ('admin', '$2a$10$O.nZ9zEUzwroerTki
 
 
 
-
-DROP TABLE IF EXISTS expense;
-DROP TABLE IF EXISTS conference;
-DROP TABLE IF EXISTS geoZone;
-DROP TABLE IF EXISTS grantapplication;
-DROP TABLE IF EXISTS presentationType;
-
 CREATE TABLE presentationType (
   name                 VARCHAR(10) NOT NULL UNIQUE
 );
+INSERT INTO presentationType(name) VALUES ('poster');
+INSERT INTO presentationType(name) VALUES ('verbal');
 
 CREATE TABLE grantapplication (
   id                   SERIAL,
-  stage                VARCHAR(20) NOT NULL DEFAULT 'pre-approval',
-  status               VARCHAR(20) NOT NULL,
-  presentationTitle    VARCHAR(50) NOT NULL,
-  requestAdvanceFunds  BOOLEAN NOT NULL,
-  presentationTypeName VARCHAR(10) NOT NULL,
-  requesterId          VARCHAR(10) NOT NULL,
-  supervisorId         VARCHAR(10) NOT NULL,
+  stage                VARCHAR(20) DEFAULT 'pre-approval',
+  status               VARCHAR(20) DEFAULT 'started',
+  presentationTitle    VARCHAR(50),
+  requestAdvanceFunds  BOOLEAN,
+  presentationTypeName VARCHAR(10),
+  requesterId          VARCHAR(10),
+  supervisorId         VARCHAR(10),
   PRIMARY KEY(id),
   FOREIGN KEY(presentationTypeName) REFERENCES presentationType(name),
   FOREIGN KEY(requesterId) REFERENCES requesters(loginId),
@@ -77,22 +77,29 @@ CREATE TABLE grantapplication (
 );
 
 CREATE TABLE expense (
-  description          VARCHAR(50) NOT NULL,
-  amount               INTEGER NOT NULL,
-  requestId            INTEGER,
+  description          VARCHAR(50),
+  amount               INTEGER DEFAULT 0,
+  requestId            INTEGER NOT NULL,
+  UNIQUE(requestId, description),
   FOREIGN KEY(requestId) REFERENCES grantapplication(id)
 );
 
 CREATE TABLE geoZone (
   name                VARCHAR(20) NOT NULL UNIQUE
 );
+INSERT INTO geoZone(name) VALUES('north america');
+INSERT INTO geoZone(name) VALUES('south america');
+INSERT INTO geoZone(name) VALUES('europe');
+INSERT INTO geoZone(name) VALUES('asia');
+INSERT INTO geoZone(name) VALUES('africa');
+INSERT INTO geoZone(name) VALUES('oceania');
 
 CREATE TABLE conference (
-  startDate           DATE NOT NULL,
-  endDate             DATE NOT NULL,
-  website             VARCHAR(50) NOT NULL,
-  location            VARCHAR(50) NOT NULL,
-  applicationId       INTEGER,
+  startDate           DATE,
+  endDate             DATE,
+  website             VARCHAR(50),
+  location            VARCHAR(50),
+  applicationId       INTEGER NOT NULL,
   geoZoneName         VARCHAR(20),
   FOREIGN KEY(applicationId) REFERENCES grantapplication(id),
   FOREIGN KEY(geoZoneName) REFERENCES geoZone(name)

@@ -15,9 +15,9 @@ module.exports.addAdmin = ({loginId, password}, callback) => {
         return callback(err)
       }
 
-      con.query(`INSERT INTO admins(loginId, password) VALUES ($1, $2)`, [loginId, password], (err) => {
+      con.query(`INSERT INTO admins(loginId, password) VALUES ($1, $2)`, [loginId, password], (err, data) => {
         con.end()
-
+        
         callback(err)
       })
     })
@@ -80,7 +80,7 @@ module.exports.authenticate = (id, type, callback) => {
     con.query(`SELECT * FROM ${type} WHERE loginId = $1 LIMIT 1`, [id], (err, {rows}) => {
       con.end()
 
-      err || !rows || !rows[0].isloggedin ? callback('not logged in', null) : callback(null, rows[0])
+      err || rows.length === 0 || !rows[0].isloggedin ? callback('not logged in', null) : callback(null, rows[0])
     })
   })
 }

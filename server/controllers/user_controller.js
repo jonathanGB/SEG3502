@@ -23,7 +23,7 @@ module.exports.addUser = ({body}, res) => {
     break
   default:
     res.status(401).json({
-      error: "bad type"
+      error: "bad user type"
     })
   }
 
@@ -36,7 +36,9 @@ module.exports.addUser = ({body}, res) => {
 
 module.exports.login = ({body: {loginId, password, type}}, res) => {
     if (!loginId || !password || !type) {
-        return res.sendStatus(401)
+        return res.status(401).json({
+          error: "missing info"
+        })
     }
 
     user.login(loginId, password, type, (err, data) => {
@@ -44,7 +46,9 @@ module.exports.login = ({body: {loginId, password, type}}, res) => {
 
         if (err || !data) {
           console.log(err)
-            return res.sendStatus(404)
+            return res.status(404).json({
+              error: 'user not in db'
+            })
         }
         console.log(data)
         const payload = {

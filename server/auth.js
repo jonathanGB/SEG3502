@@ -5,7 +5,7 @@ const action = require('./models/action_model')
 
 
 module.exports.authenticate = (req, res, next) => {
-    var token = req.get('token')
+    var token = req.cookies.token
     try {
         var {id, type} = jwt.decode(token, cfg.jwtSecret);
         console.log(id)
@@ -13,7 +13,7 @@ module.exports.authenticate = (req, res, next) => {
     }
     catch (e) {
       console.log('noooope')
-        return res.redirect('/login')
+        return res.redirect('/')
     }
 
     user.authenticate(id, type, (err, data) => {

@@ -4,6 +4,10 @@ const jwt = require('jwt-simple')
 const cfg = require('../config')
 const bcrypt = require('bcrypt')
 
+module.exports.renderLogin = (req, res) => {
+  res.render('login')
+}
+
 module.exports.addUser = ({body}, res) => {
   if (!body) {
     return res.status(400).json({
@@ -34,7 +38,8 @@ module.exports.addUser = ({body}, res) => {
   }
 }
 
-module.exports.login = ({body: {loginId, password, type}}, res) => {
+module.exports.login = ({cookies, body: {loginId, password, type}}, res) => {
+  console.log('cookies', cookies)
     if (!loginId || !password || !type) {
         return res.status(401).json({
           error: "missing info"
@@ -58,9 +63,8 @@ module.exports.login = ({body: {loginId, password, type}}, res) => {
         }
 
         const token = jwt.encode(payload, cfg.jwtSecret)
-        res.status(200).json({
-            error: null,
-            data: token
+        res.cookie('token', token).json({
+          redirect: '/menu'
         })
     })
 }

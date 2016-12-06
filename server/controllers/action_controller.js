@@ -2,9 +2,8 @@ const async = require('async')
 const action = require('../models/action_model');
 const utils = require('../utils/util');
 
-exports.index = (req, res) => {
-  res.status(203).json("not implemented yet")
-  // TODO: render according to user and type home
+exports.index = ({user: {type}}, res) => {
+  res.render(`menu-${type}`)
 }
 
 exports.getRelatedApplications = ({user: {type, data: {loginid, empnumber}}}, res) => {

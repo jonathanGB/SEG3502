@@ -2,12 +2,10 @@ const async = require('async')
 const action = require('../models/action_model');
 const utils = require('../utils/util');
 
-exports.index = ({user: {type}}, res) => {
-  console.log({
-    [type]: type
-  })
+exports.index = ({user: {type, data: {givenname}}}, res) => {
   res.render('menu', {
-    [type]: type
+    [type]: type,
+    name: givenname
   })
 }
 
@@ -52,13 +50,16 @@ exports.renderApplication = ({params: {id}, user: {type, data: {loginid, empnumb
 }
 
 exports.createApplication = ({user: {data: {loginid, supervisorid}}}, res) => {
+  console.log('why')
   action.createApplication(loginid, supervisorid, (err, appId) => {
+    console.log('huu', loginid, supervisorid)
     if (err) {
       res.status(500).json({
         error: 'not able to create application'
       })
     } else {
-      res.redirect(`/application/edit/${appId}`)
+      console.log('daaat')
+      res.redirect(`/application/:${appId}`)
     }
   })
 }

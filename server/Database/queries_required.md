@@ -10,3 +10,7 @@
 ## Actions
 1. Create Application
 2. Make Recommendations
+
+
+render application
+adaptative menu

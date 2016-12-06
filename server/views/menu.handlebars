@@ -2,12 +2,19 @@
 
 <hr>
 
+Welcome {{name}}!
+
+<h3>
 {{#if admins}}
-  hi admins
+  Admin Menu
   {{> addUser}}
 
 {{else if supervisors}}
-  hi supervisors
+  Supervisor Menu
+
+  <a class="btn btn-success" href="/application">View Applications</a>
 {{else requesters}}
-  hi requesters
+  Requester Menu
+
+  <a class="btn btn-success" href="/application/new">Create Application</a>
 {{/if}}

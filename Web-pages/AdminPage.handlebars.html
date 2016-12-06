@@ -19,53 +19,110 @@
 
 <h5>Add New User Form</h5>
 
-<form>
-    Surname : <input type="text" name="surname"><br>
-    Given Name : <input type="text" name="givenName"><br>
-    Email : <input type="text" name="email"><br>
-    Login ID : <input type="text" name="loginId"><br>
-    Password : <input type="password" name="pass"><br>
-    Select Type of User To create :
-    <input type="radio" name="Type" id="1" value="requester"> Requester
-    <input type="radio" name="Type" id="2" value="supervisor"> Supervisor<br>
-    <br><button name = "addUserButton" value = "addUser" type = "button" onmousedown="addNewUser()">Add New User</button>
-</form>
-<br>
+<div>
 
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#supervisors" aria-controls="supervisors" role="tab" data-toggle="tab">SUPERVISOR</a></li>
+    <li role="presentation"><a href="#requesters" aria-controls="requesters" role="tab" data-toggle="tab">REQUESTOR</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+    <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="supervisors">
+        <form id = "supervisorForm">
+    Surname: <input type="text" id="surnameSupervisor"><br>
+    Given Name: <input type="text" id="givenNameSupervisor"><br>
+    Email: <input type="text" id="emailSupervisor"><br>
+    loginID: <input type="text" id="loginIdSupervisor"><br>
+    Password : <input type="password" id="passSupervisor"><br>     
+    Employee Number: <input type="text" id="empNumber"><br>
+      </form> 
+      </div>
+      
+    <div role="tabpanel" class="tab-pane" id="requesters">
+        <form id = "requesterForm">
+    Surname : <input type="text" id="surnameRequester"><br>
+    GivenName : <input type="text" id="givenNameRequester"><br>
+    Email: <input type="text" id="emailRequester"><br>
+    loginId: <input type="text" id="loginIdRequester"><br>
+    Password : <input type="password" id="passRequester"><br>  
+    Type : <input type="text" id="typeRequester"><br>        
+    Student number : <input type="text" id="studentNumber"><br>
+    Academic Unit : <input type="text" id="academicUnit"><br>
+    Program : <input type="text" id="program"><br>
+    Session number: <input type="text" id="session"><br>        
+    Supervisor : <input type="text" id="supervisorId"><br>
+    Thesis topic: <input type="text" id="topic"><br>
+    BankAccount : <input type="text" id="bankAccount"><br>
+      </form> 
+      </div>
+    
+  </div>
+
+</div
 
 <script>
-    function addNewUser()
-    {
-        if (document.getElementById("1").checked == true) // if Requester is selected
-        {
-            if (true) //all information for a requester is completed
-            {
-                addRequester();//with parameters of create function
-                alert("You have added a new Requester to the database.");
-            }
-        }
-        else if (document.getElementById("2").checked == true) // if Supervisor is selected
-        {
-            if (true)//all information for a supervisor is completed
-            {
-                addSupervisor();
-                alert("You have added a new Supervisor to the database.");
-            }
-        }
-        else
-        {
-            alert("Please specify the type of user to create.") // nothing was selected yet
-        }
+  $(function() {
+    $('#supervisorForm').submit(verifySupervisor)
+    function verifySupervisor(e) {
+      e.preventDefault()
+      var data = {
+        surname: $('#surnameSupervisor').val(),
+        givenName: $('#givenNameSupervisor').val(),
+        email: $('#emailSupervisor').val(),
+        loginId: $('#loginIdSupervisor').val(),
+        password: $('#passSupervisor').val(),
+        empNumber: $('#empNumber').val(),
+        userType: 'supervisors'
+      }
+      $.ajax('/user/add', {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
     }
-
-    function addRequester()
-    {
-
+    
+    
+     $('#requesterForm').submit(verifyRequester)
+    function verifyRequester(e) {
+      e.preventDefault()
+      var data = {
+        surname: $('#surnameRequester').val(),
+        givenName: $('#givenNameRequester').val(),
+        email: $('#emailRequester').val(),
+        loginId: $('#loginIdRequester').val(),
+        password: $('#passRequester').val(),
+        studentNumber: $('#studentNumber').val(),
+        type: $('#typeRequester').val(),
+        academicUnit: $('#academicUnit').val(),
+        program: $('#program').val(),
+        sessionNumber: $('#session').val(),
+        supervisorId: $('#supervisorId').val(),
+        thesisTopic: $('#topic').val(),
+        bankAccountNumber: $('#bankAccount').val(),
+         userType: 'requesters'
+      }
+      $.ajax('/user/add', {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
     }
-    function addSupervisor()
-    {
-
-    }
+    
+  })
 </script>
 
 </body>

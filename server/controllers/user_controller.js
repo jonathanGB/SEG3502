@@ -71,8 +71,6 @@ module.exports.login = ({cookies, body: {loginId, password, type}}, res) => {
 
 module.exports.logOff = ({user: {type, data: {loginid}}}, res) => {
   user.logOff(loginid, type, (error) => {
-    res.status(error ? 400: 200).json({
-      error
-    })
+    res.clearCookie('token').redirect('/')
   })
 }

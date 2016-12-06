@@ -3,7 +3,12 @@ const action = require('../models/action_model');
 const utils = require('../utils/util');
 
 exports.index = ({user: {type}}, res) => {
-  res.render(`menu-${type}`)
+  console.log({
+    [type]: type
+  })
+  res.render('menu', {
+    [type]: type
+  })
 }
 
 exports.getRelatedApplications = ({user: {type, data: {loginid, empnumber}}}, res) => {

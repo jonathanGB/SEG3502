@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div class = "container">
+<table style="width:100%" id="apps">
+  <tr>
+    <th>Application Id </th>
+    <th>Registration Expenses</th>
+    <th>Food Expenses</th>
+    <th>Transport Expenses</th>
+    <th>Housing Expenses</th>
+    <th>Advanced Funds Requested</th>
+    <th>Recommendations</th>
+    <th>Make recommendation</th>
+
+  </tr>
+  {{#each this}}
+  <tr>
+    <td>{{id}}</td>
+    <td>{{amount.registration}}</td>
+    <td>{{amount.food}}</td>
+    <td>{{amount.transport}}</td>
+    <td>{{amount.housing}}</td>
+    <td>{{requestAdvanceFunds}}</td>
+    <td>{{recommandations}}</td>
+    <td id="rec">
+        <textarea id=txt rows="2" cols="50">
+        <button type="button" id="submitRec" class="btn btn-default" >Submit recommendations</button>
+        <button type="button" id="refuseApp" class="btn btn-default" >Decline application</button>
+        <button type="button" id="acceptApp" class="btn btn-default" >Approve application</button>
+
+    </td>
+  </tr>
+</table>
+
+</div>
+
+<script>
+
+  $(function() {
+    $('#submitRec').click(verifySubmitRec)
+
+    function verifySubmitRec(e) {
+      e.preventDefault()
+
+      var data = {
+        recommandations: $('#txt').val()
+      }
+
+      $.ajax('/application/'+{{id}}+"/incomplete", {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .done(function(response) {
+        alert("Recommendation submitted.")
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
+    }
+
+    $('#refuseApp').click(refuse)
+    function refuse(e) {
+      e.preventDefault()
+
+      var data = {
+        recommandations: $('#txt').val()
+      }
+
+      $.ajax('/application/'+{{id}}+"/refused", {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .done(function(response) {
+        alert("Recommendation submitted.")
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
+    }
+  })
+
+</script>
+
+
+
+</body>
+</html>

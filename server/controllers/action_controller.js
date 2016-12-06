@@ -1,6 +1,7 @@
 const async = require('async')
 const action = require('../models/action_model');
 const utils = require('../utils/util');
+const web = require('../../Web-pages')
 
 exports.index = (req, res) => {
   res.status(203).json("not implemented yet")
@@ -32,17 +33,17 @@ exports.renderApplication = ({params: {id}, user: {type, data: {loginid, empnumb
   if (type === "admins") {
     // what?
     action.getApplicationAdmin(id, (err, data) => {
-
+      res.render('AdminPage',data)
     })
   } else if (type === "requesters") {
     // what?
     action.getApplicationRequester(id, (err, data) => {
-
+      res.render('RequestorPage',data)
     })
   } else if (type === "supervisors") {
     // what?
     action.getApplicationSupervisor(id, (err, data) => {
-
+      res.render('SupervisorPage',data)
     })
   }
 }

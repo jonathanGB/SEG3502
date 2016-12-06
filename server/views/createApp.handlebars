@@ -69,12 +69,12 @@
 
   <div class="input-group geozone">
     <span class="input-group-addon">Geographic zone</span>
-    <input type="radio" name="geo"  class="form-control"> North America <br>
-    <input type="radio" name="geo"  class="form-control"> South America <br>
-    <input type="radio" name="geo" class="form-control"> Europe <br>
-    <input type="radio" name="geo"  class="form-control"> Asia <br>
-    <input type="radio" name="geo"  class="form-control"> Africa <br>
-    <input type="radio" name="geo"  class="form-control"> Oceania <br>
+    <input type="radio" name="geo"  class="form-control" value="north america"> North America <br>
+    <input type="radio" name="geo"  class="form-control" value="south america"> South America <br>
+    <input type="radio" name="geo" class="form-control" value="europe"> Europe <br>
+    <input type="radio" name="geo"  class="form-control" value="asia"> Asia <br>
+    <input type="radio" name="geo"  class="form-control" value="africa"> Africa <br>
+    <input type="radio" name="geo"  class="form-control" value="oceania"> Oceania <br>
   </div>
 
 </div>
@@ -194,7 +194,7 @@ function verifySubmit(e) {
       })
       .done(function(response) {
         $.ajax('/application/' + path + "/submit", {
-        method: "PUT",
+        method: "POST",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -212,6 +212,8 @@ function verifySubmit(e) {
         alert(response.responseText)
       })
 
+    } else {
+      alert('Formulaire incomplet')
     }
 
  }

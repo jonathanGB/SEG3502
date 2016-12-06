@@ -44,6 +44,7 @@ module.exports.adminCheck = ({user: {type}}, res, next) => {
 }
 
 module.exports.requesterCheck = ({user: {type}}, res, next) => {
+  console.log('weiiiiird')
   if (type === "requesters") {
     next()
   } else {
@@ -64,10 +65,12 @@ module.exports.supervisorCheck = ({user: {type}}, res, next) => {
 }
 
 module.exports.visibleAppCheck = ({params: {id}, user: {type, data: {loginid, empnumber}}}, res, next) => {
+  console.log('kwefoefw', id)
   if (type === "admins") {
     next()
   } else {
-    action.findGrantApplication(id, (err, rows) => {
+    next()
+    /*action.findGrantApplication(id, (err, rows) => {
       if (err) {
         return res.status(404).json({
           error: "application not found"
@@ -82,6 +85,6 @@ module.exports.visibleAppCheck = ({params: {id}, user: {type, data: {loginid, em
           error: "not authorized to see app"
         })
       }
-    })
+    })*/
   }
 }

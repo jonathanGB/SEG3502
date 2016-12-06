@@ -27,26 +27,26 @@ exports.getRelatedApplications = ({user: {type, data: {loginid, empnumber}}}, re
 }
 
 exports.renderApplication = ({params: {id}, user: {type, data: {loginid, empnumber}}}, res) => {
-  res.status(203).json("not implemented yet") // TODO: remove when real method implemented
+  res.render('createApp', {appId: id}) // TODO: remove when real method implemented
 
-  // TODO: here we render the application depending on the type of user
-  // e.g. a requester wants to see the form (create application case), while the supervisor wants to see the expenses only (make recommandation)
-  if (type === "admins") {
-    // what?
-    action.getApplicationAdmin(id, (err, data) => {
-
-    })
-  } else if (type === "requesters") {
-    // what?
-    action.getApplicationRequester(id, (err, data) => {
-
-    })
-  } else if (type === "supervisors") {
-    // what?
-    action.getApplicationSupervisor(id, (err, data) => {
-
-    })
-  }
+  // // TODO: here we render the application depending on the type of user
+  // // e.g. a requester wants to see the form (create application case), while the supervisor wants to see the expenses only (make recommandation)
+  // if (type === "admins") {
+  //   // what?
+  //   action.getApplicationAdmin(id, (err, data) => {
+  //
+  //   })
+  // } else if (type === "requesters") {
+  //   // what?
+  //   action.getApplicationRequester(id, (err, data) => {
+  //
+  //   })
+  // } else if (type === "supervisors") {
+  //   // what?
+  //   action.getApplicationSupervisor(id, (err, data) => {
+  //
+  //   })
+  // }
 }
 
 exports.createApplication = ({user: {data: {loginid, supervisorid}}}, res) => {
@@ -59,7 +59,7 @@ exports.createApplication = ({user: {data: {loginid, supervisorid}}}, res) => {
       })
     } else {
       console.log('daaat')
-      res.redirect(`/application/:${appId}`)
+      res.redirect(`/application/${appId}`)
     }
   })
 }

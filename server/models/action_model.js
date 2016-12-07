@@ -53,20 +53,46 @@ exports.getApplications = (type, id, callback) => {
   })
 }
 
-exports.getApplicationAdmin = (id, callback) => {
-  callback(true) // temp
-  // TODO: get what you need. look at findGrantApplication to know how to query db
-}
-
-exports.getApplicationRequester = (id, callback) => {
-  callback(true) // temp
-  // TODO: get what you need. look at findGrantApplication to know how to query db
-}
-
 exports.getApplicationSupervisor = (id, callback) => {
-  callback(true) // temp
-  // TODO: get what you need. look at findGrantApplication to know how to query db
-}
+  var con = new pg.Client(cfg.dbConn)
+     con.connect((err) => {
+     if (err) {
+       return callback(err, null)
+     }
+console.log('iiiiid', id)
+     con.query(`select G.id, E.description, E.amount, G.requestAdvanceFunds, G.recommandations from expense as E, grantapplication as G, supervisors as S where G.status = 'pending supervisor' and S.empnumber = $1 and G.id = E.requestId`, [id], (err, {rows}) => {
+       con.end()
+       if (err) {
+         return callback(err)
+       }
+       console.log(rows)
+       var parsedIds = {}
+       rows.forEach((tuple) => {
+         if (parsedIds.hasOwnProperty(tuple.id)) {
+           parsedIds[tuple.id].push(tuple)
+         } else {
+           parsedIds[tuple.id] = [tuple]
+         }
+       })
+
+       var parsedData = []
+       Object.keys(parsedIds).forEach((id, i) => {
+         parsedData.push({
+           amount: {}
+         })
+
+         parsedIds[id].forEach((tuple, j) => {
+           parsedData[i].id = tuple.id
+           parsedData[i].amount[tuple.description] = tuple.amount
+           parsedData[i].requestAdvanceFunds = tuple.requestAdvanceFunds || false
+           parsedData[i].recommandations = tuple.recommandations
+         })
+       })
+
+       callback(null, parsedData)
+     })
+   })
+  }
 
 exports.createApplication = (requesterId, supervisorId, callback) => {
   var con = new pg.Client(cfg.dbConn)

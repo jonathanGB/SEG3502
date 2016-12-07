@@ -1,0 +1,224 @@
+{{> signOff}}
+
+<form id ="createApp" data-id="{{appId}}">
+<hr>
+<h2>Costs</h2>
+<div class = "container">
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">Registration costs</span>
+    <input type="text" class="form-control" id = "regCost" aria-label="Amount (to the nearest dollar)">
+    <span class="input-group-addon">.00</span>
+  </div>
+
+  <div class="input-group">
+  <span class="input-group-addon" id="basic-addon2">Transportation costs</span>
+    <input type="text" class="form-control" id = "transpCost" aria-label="Amount (to the nearest dollar)">
+    <span class="input-group-addon">.00</span>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Housing costs</span>
+    <input type="text" class="form-control" id="houseCost"  aria-label="Amount (to the nearest dollar)">
+    <span class="input-group-addon">.00</span>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Food costs</span>
+    <input type="text" class="form-control" id="foodCost" aria-label="Amount (to the nearest dollar)">
+    <span class="input-group-addon">.00</span>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Advance Funds Required</span>
+    <input type="checkbox" id="advFund" class="form-control">
+  </div>
+</div>
+
+<hr>
+<h2>Application details</h2>
+<div class = container>
+  <div class="input-group">
+    <span class="input-group-addon">Presentation Title</span>
+    <input type="text" id="presTitle" class="form-control">
+  </div>
+
+
+  <div class="input-group">
+    <span class="input-group-addon">Presentation Type</span>
+    <input type="text" id="presType" class="form-control">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Conference Start Date</span>
+    <input type="date" id="confStart" class="form-control">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Conference End Date</span>
+    <input type="date" id="confEnd" class="form-control">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Conference location</span>
+    <input type="text" id="confLoc" class="form-control">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Conference Website</span>
+    <input type="text" id="website" class="form-control">
+  </div>
+
+
+  <div class="input-group geozone">
+    <span class="input-group-addon">Geographic zone</span>
+    <input type="radio" name="geo"  class="form-control" value="north america"> North America <br>
+    <input type="radio" name="geo"  class="form-control" value="south america"> South America <br>
+    <input type="radio" name="geo" class="form-control" value="europe"> Europe <br>
+    <input type="radio" name="geo"  class="form-control" value="asia"> Asia <br>
+    <input type="radio" name="geo"  class="form-control" value="africa"> Africa <br>
+    <input type="radio" name="geo"  class="form-control" value="oceania"> Oceania <br>
+  </div>
+
+</div>
+</form>
+
+
+<br>
+<br>
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default" id="submit" >Submit Application</button>
+  <button type="button" class="btn btn-default" id="save">Save and exit</button>
+</div>
+
+
+
+<script>
+$(function() {
+$('#save').click(verify)
+
+function verify(e) {
+  e.preventDefault()
+
+  var data = {
+    grantApplication: {
+      presentationTitle: $('#presTitle').val(),
+      presentationTypeName: $('#presType').val(),
+      requestAdvanceFunds: $('#advFund').val()
+    },
+    expense:{
+
+    inscription: $('#regCost').val(),
+    transport: $('#transpCost').val(),
+    logement: $('#houseCost').val(),
+    repas: $('#foodCost').val()
+
+  },
+
+  conference: {
+    startDate :$('#confStart').val(),
+    endDate: $('#confEnd').val(),
+    location: $('#confLoc').val(),
+    website: $('#website').val(),
+    geoZoneName: $('#geozone[type=radio]:checked').val()
+  }
+
+  }
+  var path = $('#createApp').data("id")
+  $.ajax('/application/' + path, {
+    method: "PUT",
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(data)
+  })
+  .done(function(response) {
+    window.location = "/menu"
+  })
+  .fail(function(response) {
+    alert(response.responseText)
+  })
+
+}
+
+
+
+$('#submit').click(verifySubmit)
+
+function verifySubmit(e) {
+  e.preventDefault()
+
+   var data = {
+    grantApplication: {
+      presentationTitle: $('#presTitle').val(),
+      presentationTypeName: $('#presType').val(),
+      requestAdvanceFunds: $('#advFund').val()
+    },
+    expense:{
+
+    inscription: $('#regCost').val(),
+    transport: $('#transpCost').val(),
+    logement: $('#houseCost').val(),
+    repas: $('#foodCost').val()
+
+  },
+
+  conference: {
+    startDate :$('#confStart').val(),
+    endDate: $('#confEnd').val(),
+    location: $('#confLoc').val(),
+    website: $('#website').val(),
+    geoZoneName: $('.geozone [type=radio]:checked').val()
+  }
+
+  }
+
+  var flag = true;
+  Object.keys(data).forEach(function(outerKey) {
+    var innerObj = data[outerKey]
+
+    Object.keys(innerObj).forEach(function(innerKey) {
+      if (!innerObj[innerKey]) {
+        flag = false;
+      }
+    })
+  })
+
+  if (flag) {
+      var path = $('#createApp').data("id")
+      $.ajax('/application/' + path, {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .done(function(response) {
+        $.ajax('/application/' + path + "/submit", {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+
+        })
+        .done(function(response) {
+          alert("Successful Sumission of application")
+        })
+        .fail(function(response) {
+          alert(response.responseText)
+        })
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
+
+    } else {
+      alert('Formulaire incomplet')
+    }
+
+ }
+
+})
+</script>

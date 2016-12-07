@@ -1,0 +1,20 @@
+{{> signOff}}
+
+<hr>
+
+Welcome {{name}}!
+
+<h3>
+{{#if admins}}
+  Admin Menu
+  {{> addUser}}
+
+{{else if supervisors}}
+  Supervisor Menu
+
+  <a class="btn btn-success" href="/application">View Applications</a>
+{{else requesters}}
+  Requester Menu
+
+  <a class="btn btn-success" href="/application/new">Create Application</a>
+{{/if}}

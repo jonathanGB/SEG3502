@@ -3,7 +3,7 @@
 <body>
 
 <div class = "container">
-<table style="width:100%" id="apps">
+<table class="table" style="width:100%" id="apps">
   <tr>
     <th>Application Id </th>
     <th>Registration Expenses</th>
@@ -13,7 +13,7 @@
     <th>Advanced Funds Requested</th>
     <th>Recommendations</th>
     <th>Make recommendation</th>
-
+    <th>Decision</th>
   </tr>
   {{#each this}}
   <tr>
@@ -24,14 +24,16 @@
     <td>{{amount.housing}}</td>
     <td>{{requestAdvanceFunds}}</td>
     <td>{{recommandations}}</td>
-    <td id="rec">
+    <td>
         <textarea id=txt rows="2" cols="50">
-        <button type="button" id="submitRec" class="btn btn-default" >Submit recommendations</button>
-        <button type="button" id="refuseApp" class="btn btn-default" >Decline application</button>
-        <button type="button" id="acceptApp" class="btn btn-default" >Approve application</button>
-
+    </td>
+    <td>
+      <button type="button" id="submitRec" class="btn btn-default" >Submit recommendations</button>
+      <button type="button" id="refuseApp" class="btn btn-default" >Decline application</button>
+      <button type="button" id="acceptApp" class="btn btn-default" >Approve application</button>
     </td>
   </tr>
+  {{/each}}
 </table>
 
 </div>
@@ -81,7 +83,32 @@
         data: JSON.stringify(data)
       })
       .done(function(response) {
-        alert("Recommendation submitted.")
+        alert("Application refused.")
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
+    }
+
+    $('#acceptApp').click(accept)
+
+    function accept(e) {
+      e.preventDefault()
+
+      var data = {
+        recommandations: $('#txt').val()
+      }
+
+      $.ajax('/application/'+{{id}}+"/approved", {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .done(function(response) {
+        alert("Application approved.")
       })
       .fail(function(response) {
         alert(response.responseText)

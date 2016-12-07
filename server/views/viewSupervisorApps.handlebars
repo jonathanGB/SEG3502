@@ -1,0 +1,70 @@
+{{> signOff}}
+
+<table class="table" style="width:100%" id="apps">
+  <tr>
+    <th>Application Id </th>
+    <th>Registration Expenses</th>
+    <th>Food Expenses</th>
+    <th>Transport Expenses</th>
+    <th>Housing Expenses</th>
+    <th>Advanced Funds Requested</th>
+    <th>Recommendations</th>
+    <th>Make recommendation</th>
+    <th>Decision</th>
+  </tr>
+  {{#each applications}}
+  <tr>
+    <td>{{id}}</td>
+    <td>{{amount.inscription}}</td>
+    <td>{{amount.repas}}</td>
+    <td>{{amount.transport}}</td>
+    <td>{{amount.logement}}</td>
+    <td>{{requestAdvanceFunds}}</td>
+    <td>{{recommandations}}</td>
+    <td class="comments">
+        <textarea id=txt rows="2" cols="50"></textarea>
+    </td>
+    <td data-id="{{id}}">
+        <button style="margin-bottom: 5px;" type="button" class="btn btn-default" data-type="incomplete">Recommend</button>
+        <button style="margin-bottom: 5px;" type="button" class="btn btn-default" data-type="refused">Decline</button>
+        <button type="button" class="btn btn-default" data-type="ok">Approve</button>
+    </td>
+  </tr>
+  {{/each}}
+</table>
+
+<script>
+
+  $(function() {
+    $('button').click(sendFeedback)
+
+    function sendFeedback(e) {
+      e.preventDefault()
+      var $this = $(this)
+
+
+      var data = {
+        recommandations: $this.parent().siblings('.comments').children('textarea').val(),
+        response: $this.data('type')
+      }
+
+      $.ajax('/application/'+$this.parent().data('id')+"/supervisorResponse", {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .done(function(response) {
+        alert("Recommendation submitted.")
+        $this.parents('tr').animate({ 'fontSize': '1px' }, 100)
+        .slideUp(1)
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
+    }
+  })
+
+</script>

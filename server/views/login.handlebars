@@ -1,0 +1,67 @@
+<i> Please enter your account information below. </i><br><br>
+
+<form id ="login">
+    Login ID : <input type="text" id="loginId"><br>
+    Password : <input type="password" id="password"><br>
+    Type: <input type="text" id="type"><br>
+    <button class="btn btn-primary" name="signInButton" value="signIn" type="submit">Sign In</button>
+</form>
+
+<script>
+
+  $(function() {
+    $('#login').submit(verify)
+
+    function verify(e) {
+      e.preventDefault()
+
+      var data = {
+        loginId: $('#loginId').val(),
+        password: $('#password').val(),
+        type: $('#type').val()
+      }
+
+      $.ajax('/user/login', {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+      })
+      .done(function(response) {
+        window.location = response.redirect
+      })
+      .fail(function(response) {
+        alert(response.responseText)
+      })
+
+
+        // search database : returns null of a permittedUser (either a requester or supervisor)
+        // PermittedUser findUser(loginId, pass)
+        //{
+        //    ???
+        //}
+
+
+        // if found, then redirect to correct page (according to user)
+
+                // if user is a Requester -> send to Requester page
+
+            // window.location = "RequesterPage.html";
+
+                // if user is a Supervisor -> send to Supervisor page
+
+            // window.location = "SupervisorPage.html";
+
+                // if user is an Admin -> send to Admin Page
+
+         //window.location = "AdminPage.html";
+
+            // else display error message :
+
+        //alert("You have entered an invalid Login ID and/or Password. Please try again.");
+    }
+  })
+
+</script>

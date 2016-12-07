@@ -3,8 +3,8 @@ module.exports = { // normally should be environment variables
     dbConn: {
       host: "localhost",
       port: "5432",
-      user: "postgres",
-      password: "root",
+      user: "boubou",
+      password: "",
       database: "projet-seg3502"
     }
 };

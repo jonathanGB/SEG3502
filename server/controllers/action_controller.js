@@ -2,49 +2,36 @@ const async = require('async')
 const action = require('../models/action_model');
 const utils = require('../utils/util');
 
-exports.index = (req, res) => {
-  res.status(203).json("not implemented yet")
-  // TODO: render according to user and type home
+exports.index = ({user: {type, data: {givenname, isloggedin}}}, res) => {
+  res.render('menu', {
+    [type]: type,
+    name: givenname,
+    isloggedin
+  })
 }
 
-exports.getRelatedApplications = ({user: {type, data: {loginid, empnumber}}}, res) => {
+exports.getRelatedApplications = ({user: {type, data: {loginid, empnumber, isloggedin}}}, res) => {
   const sentId = (type === "admins" ? null : type === "requesters" ? loginid : empnumber)
 
-  action.getApplications(type, sentId, (error, applications) => {
+  action.getApplicationSupervisor(empnumber, (error, applications) => {
     if (error) {
       return res.status(500).json({
         error
       })
     }
-
-    return res.status(200).json({
-      error,
-      data: applications
+    console.log('applications', applications.length)
+    res.render('viewSupervisorApps', {
+      applications,
+      isloggedin
     })
   })
 }
 
-exports.renderApplication = ({params: {id}, user: {type, data: {loginid, empnumber}}}, res) => {
-  res.status(203).json("not implemented yet") // TODO: remove when real method implemented
-
-  // TODO: here we render the application depending on the type of user
-  // e.g. a requester wants to see the form (create application case), while the supervisor wants to see the expenses only (make recommandation)
-  if (type === "admins") {
-    // what?
-    action.getApplicationAdmin(id, (err, data) => {
-
-    })
-  } else if (type === "requesters") {
-    // what?
-    action.getApplicationRequester(id, (err, data) => {
-
-    })
-  } else if (type === "supervisors") {
-    // what?
-    action.getApplicationSupervisor(id, (err, data) => {
-
-    })
-  }
+exports.renderApplication = ({params: {id}, user: {type, data: {loginid, empnumber, isloggedin}}}, res) => {
+  res.render('createApp', {
+    appId: id,
+    isloggedin
+  })
 }
 
 exports.createApplication = ({user: {data: {loginid, supervisorid}}}, res) => {
@@ -54,7 +41,7 @@ exports.createApplication = ({user: {data: {loginid, supervisorid}}}, res) => {
         error: 'not able to create application'
       })
     } else {
-      res.redirect(`/application/edit/${appId}`)
+      res.redirect(`/application/${appId}`)
     }
   })
 }
@@ -101,7 +88,7 @@ exports.submitApplication = ({params: {id}}, res) => {
   })
 }
 
-exports.feedbackApplication = ({body: {response, recommandation}, params: {id}}, res) => {
+exports.feedbackApplication = ({body: {response, recommandations}, params: {id}}, res) => {
   if (!response) {
     return res.status(401).json({
       error: 'no response provided'
@@ -109,7 +96,7 @@ exports.feedbackApplication = ({body: {response, recommandation}, params: {id}},
   }
 
   var newStatus;
-  if (recommandation) {
+  if (response === "incomplete") {
     newStatus = "incomplete"
   }
   else if (response === "ok") {
@@ -117,9 +104,11 @@ exports.feedbackApplication = ({body: {response, recommandation}, params: {id}},
   } else {
     newStatus = "refused"
   }
+  console.log(response)
+  console.log('status', newStatus)
 
-  if (recommandation) {
-    action.feedbackApplication(id, newStatus, recommandation, (error) => {
+  if (recommandations) {
+    action.feedbackApplication(id, newStatus, recommandations, (error) => {
       res.status(error ? 500 : 200).json({
         error
       })

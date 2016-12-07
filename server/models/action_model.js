@@ -53,19 +53,46 @@ exports.getApplications = (type, id, callback) => {
   })
 }
 
-exports.getApplicationAdmin = (id, callback) => {
-  callback(true) // temp
-  // TODO: get what you need. look at findGrantApplication to know how to query db
-}
 
-exports.getApplicationRequester = (id, callback) => {
-  callback(true) // temp
-  // TODO: get what you need. look at findGrantApplication to know how to query db
+
+exports.getApplicationRequesterAdmin = (id, callback) => {
+  
+  var con = new pg.Client(cfg.dbConn)
+  con.connect((err) => {
+    if (err) {
+      return callback(err, null)
+    }
+
+    con.query(`select * from grantapplication as G, expense as E, conference as C, geoZone as Ge where G.id = $1 and G.id = E.requestId and E.requestId = C.applicationId` and C.geoZoneName = Ge.name, [id], (err, {rows}) => {
+      con.end()
+
+      if (err || rows.length === 0) {
+        callback(err, null)
+      } else {
+        callback(null, rows)
+      }
+    })
+  })
 }
 
 exports.getApplicationSupervisor = (id, callback) => {
-  callback(true) // temp
-  // TODO: get what you need. look at findGrantApplication to know how to query db
+  
+  var con = new pg.Client(cfg.dbConn)
+  con.connect((err) => {
+    if (err) {
+      return callback(err, null)
+    }
+
+    con.query(`select E.description, E.amount, G.requestAdvanceFunds, G.recommandations from expense as E, grantapplication as G where G.id = $1 and G.id = E.requestId`, [id], (err, {rows}) => {
+      con.end()
+
+      if (err || rows.length === 0) {
+        callback(err, null)
+      } else {
+        callback(null, rows)
+      }
+    })
+  })
 }
 
 exports.createApplication = (requesterId, supervisorId, callback) => {

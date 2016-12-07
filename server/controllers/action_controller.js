@@ -31,12 +31,12 @@ exports.renderApplication = ({params: {id}, user: {type, data: {loginid, empnumb
   // e.g. a requester wants to see the form (create application case), while the supervisor wants to see the expenses only (make recommandation)
   if (type === "admins") {
     // what?
-    action.getApplicationAdmin(id, (err, data) => {
+    action.getApplicationRequesterAdmin(id, (err, data) => {
 
     })
   } else if (type === "requesters") {
     // what?
-    action.getApplicationRequester(id, (err, data) => {
+    action.getApplicationRequesterAdmin(id, (err, data) => {
 
     })
   } else if (type === "supervisors") {
